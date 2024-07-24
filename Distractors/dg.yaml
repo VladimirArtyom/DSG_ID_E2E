@@ -1,0 +1,6 @@
+dg_lr: 0.0004
+dg_masking_chance: 0.6
+dg_src_max: 512
+dg_tgt_max: 80
+dg_batch_size: 16
+dg_epochs: 3

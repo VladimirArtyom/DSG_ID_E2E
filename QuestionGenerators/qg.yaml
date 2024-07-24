@@ -1,0 +1,8 @@
+qg_lr: 0.0004
+qg_masking_chance: 0.6
+qg_src_max: 512
+qg_tgt_max: 80
+qg_batch_size: 16
+qg_epochs: 3
+run: "qg"
+type_run: "test"
