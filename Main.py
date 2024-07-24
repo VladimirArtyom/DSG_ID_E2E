@@ -36,7 +36,7 @@ arg.add_argument("-qgtmax", "--qg_target_max_token_len",
 arg.add_argument("-qge", "--qg_epochs",
                  type=int, default=qg_config.qg_epochs)
 
-arg.add_argument("-qgmodelpth" "--qg_model_path",
+arg.add_argument("-qgmp", "--qg_model_path",
                  type=str, default=qg_config.qg_model_path)
 
 # Main Arguments
@@ -80,6 +80,7 @@ arg.add_argument("-dgmodelpth" "--dg_model_path",
 
 args = arg.parse_args()
 
+print(args)
 
 train_df: DataFrame = read_csv(main_config.train_path)
 val_df: DataFrame = read_csv(main_config.val_path)

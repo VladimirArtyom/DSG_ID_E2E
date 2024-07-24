@@ -4,4 +4,4 @@ qg_src_max: 512
 qg_tgt_max: 80
 qg_batch_size: 16
 qg_epochs: 3
-qg_model_path: "/content/drive/MyDrive/SQUAD/best-checkpoint-v2.ckpt"
+qg_model_path: "/content/drive/MyDrive/SQUAD/checkpoints/best-checkpoint-v2.ckpt"
