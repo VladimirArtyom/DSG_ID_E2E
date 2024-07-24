@@ -1,6 +1,5 @@
-numpy==2.0.1
+numpy==1.26.4
 omegaconf==2.3.0
 pandas==2.2.2
 pytorch_lightning==1.2.10
 torch==2.1.0
-transformers==4.11.3
