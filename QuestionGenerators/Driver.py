@@ -58,8 +58,7 @@ class Driver():
     def test_question_generator(this):
         if this.trainer is None:
             raise ValueError("Trainer not initialized")
-
- model_path       return this.trainer.test(this.qgModel, this.qgDataModule)
+        return this.trainer.test(this.qgModel, this.qgDataModule)
 
     def val_question_generator(this):
         if this.trainer is None:
