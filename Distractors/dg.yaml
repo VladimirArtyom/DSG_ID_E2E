@@ -4,3 +4,4 @@ dg_src_max: 512
 dg_tgt_max: 80
 dg_batch_size: 16
 dg_epochs: 3
+dg_model_path: "/content/drive/MyDrive/RACE/checkpoints/best-checkpoint-v2.ckpt"

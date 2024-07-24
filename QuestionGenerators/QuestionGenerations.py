@@ -56,11 +56,13 @@ class QGModel(LightningModule):
 class QGDataset(Dataset):
     def __init__(this, data: DataFrame,
                  tokenizer: T5Tokenizer,
+                 sep_token: str,
                  masking_chance: float = 0.6,
                  source_max_token_len: int = 512,
                  target_max_token_len: int = 80):
         super().__init__()
         this.data = data
+        this.sep_token = sep_token
         this.tokenizer = tokenizer
         this.source_max_token_len = source_max_token_len
         this.target_max_token_len = target_max_token_len
@@ -74,7 +76,7 @@ class QGDataset(Dataset):
         data_row = this.data.iloc[index]
 
         if rand() < this.masking_chance:
-            answer = data_row['answer_text']
+            answer = data_row['answer']
         else:
             answer = choice(this.masks_token)
 
@@ -89,7 +91,7 @@ class QGDataset(Dataset):
         )
 
         target_encoding = this.tokenizer(
-            '{} {} {}'.format(data_row['answer_text'], this.sep_token, data_row['question']),
+            '{} {} {}'.format(data_row['answer'], this.sep_token, data_row['question']),
             max_length=this.target_max_token_len,
             padding='max_length',
             truncation=True,
@@ -102,7 +104,7 @@ class QGDataset(Dataset):
         labels[labels == 0] = -100
 
         return dict(
-            answer_text=data_row['answer_text'],
+            answer_text=data_row['answer'],
             context=data_row['context'],
             question=data_row['question'],
             input_ids=source_encoding['input_ids'].flatten(),
@@ -114,6 +116,7 @@ class QGDataset(Dataset):
 class QGDataModule(LightningDataModule):
     def __init__(this, train_df: DataFrame, val_df: DataFrame,
                  test_df: DataFrame, tokenizer: T5Tokenizer,
+                 sep_token: str = "<sep>",
                  masking_chance: float = 0.6,
                  batch_size: int = 16, source_max_token_len: int = 512,
                  target_max_token_len: int = 80):
@@ -130,16 +133,19 @@ class QGDataModule(LightningDataModule):
 
     def setup(this, stage: str = None):
         this.train_dataset = QGDataset(this.train_df, this.tokenizer,
+                                        this.sep_token,
                                        this.masking_chance,
                                        this.source_max_token_len,
                                        this.target_max_token_len)
         
         this.val_dataset = QGDataset(this.val_df, this.tokenizer,
+                                     this.sep_token,
                                      this.masking_chance,
                                      this.source_max_token_len,
                                      this.target_max_token_len)
 
         this.test_dataset = QGDataset(this.test_df, this.tokenizer,
+                                      this.sep_token,
                                       this.masking_chance,
                                       this.source_max_token_len,
                                       this.target_max_token_len)

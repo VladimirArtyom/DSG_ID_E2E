@@ -1,2 +1,8 @@
-run: "none"
+run: "all"
 type_run: "test"
+sep_token: "<sep>"
+train_path: "train_trainable_v3.csv"
+test_path: "test_trainable_v3.csv"
+val_path: "dev_trainable_v3.csv"
+model_name: "t5-small"
+
