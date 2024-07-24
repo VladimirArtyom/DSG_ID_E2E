@@ -89,7 +89,7 @@ tokenizer: T5Tokenizer = T5Tokenizer.from_pretrained(main_config.model_name)
 #model: T5ForConditionalGeneration = T5ForConditionalGeneration.from_pretrained(main_config.model_name)
 new_tokenizer_token = tokenizer.add_tokens(main_config.sep_token)
 
-model = T5ForConditionalGeneration.from_pretrained(main_config.model_name)
+model = T5ForConditionalGeneration.from_pretrained(main_config.model_name, return_dict=True)
 new_tokenizer_len = len(tokenizer)
 optimizer = AdamW(model.parameters(), lr=args.qg_learning_rate)
 optimizer_lr = args.qg_learning_rate
@@ -107,6 +107,7 @@ if args.type_run == "test":
                          model, new_tokenizer_len,
                          optimizer, optimizer_lr
                          )
+        QGdriver.try_generate(tokenizer, test_df)
 
     elif args.run == "none":
         ...

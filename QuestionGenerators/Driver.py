@@ -3,6 +3,7 @@ from pandas import DataFrame
 from transformers import T5Tokenizer, T5ForConditionalGeneration, AdamW
 from pytorch_lightning import Trainer
 from typing import List
+from torch import load
 
 
 class Driver():
@@ -37,6 +38,7 @@ class Driver():
                                           optimizer_lr: float = 1e-4):
         this.qgModel = QGModel(model, new_tokenizer_len,
                                optimizer, optimizer_lr)
+        this.optimizer = optimizer
         return
 
     def train_question_generator(this,
@@ -69,7 +71,7 @@ class Driver():
         if this.qgModel is None:
             raise ValueError("QGModel not initialized")
 
-        this.qgmodel = this.qgModel.load_from_checkpoint(model_path)
+        this.qgModel.load_from_checkpoint(load(model_path, map_location="cpu"))
         return
 
     def run_qg(this,
@@ -181,7 +183,7 @@ class Driver():
             context = row["context"]
             original_question = row["question"]
             generated = this.generate(answer, context,
-                                      this.qgModel, original_question)
+                                     tokenizer)
             print("Generated: ", generated)
 
             if not save:
