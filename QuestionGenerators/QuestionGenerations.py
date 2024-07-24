@@ -15,7 +15,7 @@ class QGModel(LightningModule):
         super().__init__()
         this.model: T5ForConditionalGeneration = model
         this.model.resize_token_embeddings(new_tokenizer_len)
-        this.lr: float = this.optimizer_lr
+        this.lr: float = optimizer_lr
         this.opt: AdamW = optimizer
 
     def forward(this, input_ids, attention_mask, labels=None):
