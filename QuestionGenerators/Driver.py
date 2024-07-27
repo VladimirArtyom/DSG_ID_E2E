@@ -183,10 +183,10 @@ class Driver():
             original_question = row["question"]
             generated = this.generate(answer, context,
                                      tokenizer)
-            print("Generated: ", generated)
-
             if not save:
-                this.show_results(answer,
+                this.show_results(generated,
+                                  answer,
                                   context,
-                                  generated)
+                                  original_question,
+                                  )
 

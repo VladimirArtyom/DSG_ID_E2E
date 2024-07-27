@@ -5,8 +5,11 @@ from torch.cuda import is_available as cuda_available
 from typing import List
 from pandas import DataFrame, read_csv
 from QuestionGenerators.Driver import Driver as QGDriver
-from Distractors import Driver as DGDriver
-from transformers import T5TokenizerFast as T5Tokenizer, T5ForConditionalGeneration, AdamW
+from Distractors.Driver import Driver as DGDriver
+
+from transformers import (T5TokenizerFast as T5Tokenizer,
+                          T5ForConditionalGeneration,
+                          AdamW)
 
 qg_config = OmegaConf.load("./QuestionGenerators/qg.yaml")
 dg_config = OmegaConf.load("./Distractors/dg.yaml")
@@ -86,29 +89,54 @@ train_df: DataFrame = read_csv(main_config.train_path)
 val_df: DataFrame = read_csv(main_config.val_path)
 test_df: DataFrame = read_csv(main_config.test_path)
 tokenizer: T5Tokenizer = T5Tokenizer.from_pretrained(main_config.model_name)
-#model: T5ForConditionalGeneration = T5ForConditionalGeneration.from_pretrained(main_config.model_name)
 new_tokenizer_token = tokenizer.add_tokens(main_config.sep_token)
-
-model = T5ForConditionalGeneration.from_pretrained(main_config.model_name, return_dict=True)
 new_tokenizer_len = len(tokenizer)
-optimizer = AdamW(model.parameters(), lr=args.qg_learning_rate)
-optimizer_lr = args.qg_learning_rate
+### QG ###
+model_qg = T5ForConditionalGeneration.from_pretrained(main_config.model_name,
+                                                      return_dict=True)
+optimizer_qg = AdamW(model_qg.parameters(),
+                     lr=args.qg_learning_rate)
+optimizer_qg_lr = args.qg_learning_rate
+
+QGdriver = QGDriver(args.separator,
+                    args.qg_batch_size,
+                    args.qg_source_max_token_len,
+                    args.qg_target_max_token_len,
+                    args.qg_masking_chance)
+### QG ###
+
+
+### DG ###
+model_dg = T5ForConditionalGeneration.from_pretrained(main_config.model_name,
+                                                      return_dict=True)
+optimizer_dg = AdamW(model_dg.parameters(),
+                     lr=args.dg_learning_rate)
+
+optimizer_dg_lr = args.dg_learning_rate
+
+DGdriver = DGDriver(sep_token=args.separator,
+                    batch_size=args.dg_batch_size,
+                    max_source_token_len=args.dg_source_max_token_len,
+                    max_target_token_len=args.dg_target_max_token_len)
+
+### DG ###
 
 if args.type_run == "test":
     if args.run == "all":
-        QGdriver = QGDriver(args.separator,
-                            args.qg_batch_size,
-                            args.qg_source_max_token_len,
-                            args.qg_target_max_token_len,
-                            args.qg_masking_chance)
 
         QGdriver.test_qg(args.qg_model_path, train_df,
                          val_df, test_df, tokenizer,
-                         model, new_tokenizer_len,
-                         optimizer, optimizer_lr
+                         model_qg, new_tokenizer_len,
+                         optimizer_qg, optimizer_qg_lr
                          )
         QGdriver.try_generate(tokenizer, test_df)
 
+        # DG
+        DGdriver.test_dg(args.dg_model_path, model_dg,
+                         train_df, val_df, test_df,
+                         tokenizer, new_tokenizer_len,
+                         optimizer_dg, optimizer_dg_lr, map_location=device)
+        DGdriver.try_generate()
     elif args.run == "none":
         ...
     elif args.run == "qg":
