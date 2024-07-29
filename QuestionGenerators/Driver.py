@@ -1,5 +1,5 @@
 from QuestionGenerators.QuestionGenerations import QGModel, QGDataModule
-from pandas import DataFrame
+from pandas import DataFrame, concat
 from transformers import T5Tokenizer, T5ForConditionalGeneration, AdamW
 from pytorch_lightning import Trainer
 from typing import List
@@ -180,7 +180,7 @@ class Driver():
                                     "context",
                                     "question",
                                     "generated"])
-        for i in len(df):
+        for i in range(len(df)):
             row = df.iloc[i]
             answer = row["answer"]
             context = row["context"]
@@ -188,11 +188,13 @@ class Driver():
             generated = this.generate(answer, context,
                                       tokenizer)
 
-            result = result.append({"correct": answer,
+            new_row = DataFrame({"correct": answer,
                                     "context": context,
                                     "question": question,
                                     "generated": generated},
-                                   ignore_index=True)
+                                )
+
+            result = concat([result, new_row], ignore_index=True)
 
         result.to_csv(file_name, index=False)
         print("Results saved to {}".format(file_name))

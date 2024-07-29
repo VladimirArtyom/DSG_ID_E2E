@@ -1,7 +1,7 @@
 from Distractors.DistractorsGenerations import DGModel, DGDataModule
 from torch import load, Tensor
 from torch.optim import Optimizer
-from pandas import DataFrame
+from pandas import DataFrame, concat
 from transformers import T5TokenizerFast as T5Tokenizer, T5PreTrainedModel
 from typing import List, Dict
 from pytorch_lightning import Trainer
@@ -80,7 +80,7 @@ class Driver():
             raise ValueError("DGModel not initialized")
 
         this.dgModel.load_state_dict(load(model_path,
-                                     map_location=map_location)['state_dict'])
+                                          map_location=map_location)['state_dict'])
         return
 
     def run_dg(this,
@@ -212,7 +212,7 @@ class Driver():
                                     "incorrect_2",
                                     "incorrect_3",
                                     "generated"])
-        for i in len(df):
+        for i in range(len(df)):
             row = df.iloc[i]
             answer = row["correct"]
             context = row["context"]
@@ -223,15 +223,16 @@ class Driver():
             generated = this.generate(answer, question,
                                       context, incorrect_1,
                                       incorrect_2, incorrect_3, tokenizer)
+            new_row = DataFrame({"correct": answer,
+                                 "context": context,
+                                 "question": question,
+                                 "incorrect_1": incorrect_1,
+                                 "incorrect_2": incorrect_2,
+                                 "incorrect_3": incorrect_3,
+                                 "generated": generated},
+                                ignore_index=True)
 
-            result = result.append({"correct": answer,
-                                    "context": context,
-                                    "question": question,
-                                    "incorrect_1": incorrect_1,
-                                    "incorrect_2": incorrect_2,
-                                    "incorrect_3": incorrect_3,
-                                    "generated": generated},
-                                   ignore_index=True)
+            result = concat([result, new_row], ignore_index=True)
 
         result.to_csv(file_name, index=False)
         print("Results saved to {}".format(file_name))
