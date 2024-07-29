@@ -36,7 +36,8 @@ class Driver():
                                           new_tokenizer_len: int,
                                           optimizer: AdamW,
                                           optimizer_lr: float = 1e-4):
-        this.qgModel = QGModel(model, new_tokenizer_len,
+        this.qgModel = QGModel()
+        this.qgModel.initialize(model, new_tokenizer_len,
                                optimizer, optimizer_lr)
         this.optimizer = optimizer
         return
@@ -69,8 +70,8 @@ class Driver():
     def load_qg_model(this, model_path: str):
         if this.qgModel is None:
             raise ValueError("QGModel not initialized")
-
-        this.qgModel.state_dict(load(model_path, map_location="cpu"))
+        this.qgModel = QGModel.load_from_checkpoint(model_path)
+        #this.qgModel.state_dict(load(model_path, map_location="cpu"))
         return
 
     def run_qg(this,
@@ -150,7 +151,7 @@ class Driver():
         )
 
         preds = {
-            tokenizer.decode(generated_id, skip_special_tokens=True,
+            tokenizer.decode(generated_id, skip_special_tokens=False,
                              clean_up_tokenization_spaces=True)
             for generated_id in generated_ids
         }

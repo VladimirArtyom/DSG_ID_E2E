@@ -8,11 +8,15 @@ from numpy.random import rand, choice
 
 
 class QGModel(LightningModule):
-    def __init__(this, model: T5ForConditionalGeneration,
-                 new_tokenizer_len: int,
-                 optimizer: AdamW,
-                 optimizer_lr: float = 1e-4):
+    def __init__(this):
         super().__init__()
+
+    def initialize(this,
+                   model: T5ForConditionalGeneration,
+                   new_tokenizer_len: int,
+                   optimizer: AdamW,
+                   optimizer_lr: float = 1e-4
+                   ):
         this.model: T5ForConditionalGeneration = model
         this.model.resize_token_embeddings(new_tokenizer_len)
         this.lr: float = optimizer_lr

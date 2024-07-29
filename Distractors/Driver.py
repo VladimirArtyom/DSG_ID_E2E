@@ -190,7 +190,7 @@ class Driver():
         print("Question {}\nAnswer: {}".format(question, answer))
 
         print("========================================Generated Results===========================================================")
-        print("Original Distractors: Incorrect-1:{}\nIncorrect-2:{}\nIncorrect-3 {}".format())
+        print("Original Distractors: Incorrect-1:{}\nIncorrect-2:{}\nIncorrect-3 {}".format(incorrect_1, incorrect_3, incorrect_3))
         print("Generated: {}".format(generated))
         print("====================================================================================================================")
         print()
