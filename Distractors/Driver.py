@@ -167,7 +167,7 @@ class Driver():
         outputs: Tensor = this.dgModel.model.generate(
             input_ids=source_encoding['input_ids'],
             attention_mask=source_encoding['attention_mask'],
-            max_length=this.target_max_token_len,
+            max_length=this.this.max_target_source_token_len,
             num_beams=num_beams,
             early_stopping=True,
             repetition_penalty=2.5,
