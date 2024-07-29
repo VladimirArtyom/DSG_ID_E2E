@@ -90,7 +90,7 @@ val_df: DataFrame = read_csv(main_config.val_path_qg)
 test_df: DataFrame = read_csv(main_config.test_path_qg)
 
 race_train_df: DataFrame = read_csv(main_config.train_path_dg)
-race_dev_df: DataFrame = read_csv(main_config.dev_path_dg)
+race_val_df: DataFrame = read_csv(main_config.val_path_dg)
 race_test_df: DataFrame = read_csv(main_config.test_path_dg)
 
 tokenizer: T5Tokenizer = T5Tokenizer.from_pretrained(main_config.model_name)
@@ -105,6 +105,7 @@ model_qg = T5ForConditionalGeneration.from_pretrained(main_config.model_name,
                                                       return_dict=True)
 optimizer_qg = AdamW(model_qg.parameters(),
                      lr=args.qg_learning_rate)
+
 optimizer_qg_lr = args.qg_learning_rate
 
 QGdriver = QGDriver(args.separator,
@@ -142,7 +143,7 @@ if args.type_run == "test":
 
         # DG
         DGdriver.test_dg(args.dg_model_path, model_dg,
-                         train_df, val_df, race_test_df,
+                         race_train_df, race_val_df, race_test_df,
                          tokenizer_dg, new_tokenizer_len,
                          optimizer_dg, optimizer_dg_lr, map_location=device)
         DGdriver.try_generate(tokenizer_dg, race_test_df, n=10)
