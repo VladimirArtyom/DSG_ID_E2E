@@ -192,6 +192,7 @@ class Driver():
                                     "context": context,
                                     "question": question,
                                     "generated": generated},
+                                index=[0]
                                 )
 
             result = concat([result, new_row], ignore_index=True)

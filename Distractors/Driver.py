@@ -230,7 +230,7 @@ class Driver():
                                  "incorrect_2": incorrect_2,
                                  "incorrect_3": incorrect_3,
                                  "generated": generated},
-                                ignore_index=True)
+                                index=[0])
 
             result = concat([result, new_row], ignore_index=True)
 
