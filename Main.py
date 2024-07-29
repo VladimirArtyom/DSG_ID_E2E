@@ -139,14 +139,21 @@ if args.type_run == "test":
                          model_qg, new_tokenizer_len,
                          optimizer_qg, optimizer_qg_lr
                          )
-        QGdriver.try_generate(tokenizer, test_df, n=10)
+        #QGdriver.try_generate(tokenizer, test_df, n=10)
+        QGdriver.save_generated_result(test_df, tokenizer, "test_generated.csv")
+        QGdriver.save_generated_result(val_df, tokenizer, "val_generated.csv")
+        #QGdriver.save_generated_result(train_df, tokenizer, "train_generated.csv")
 
         # DG
         DGdriver.test_dg(args.dg_model_path, model_dg,
                          race_train_df, race_val_df, race_test_df,
                          tokenizer_dg, new_tokenizer_len,
                          optimizer_dg, optimizer_dg_lr, map_location=device)
-        DGdriver.try_generate(tokenizer_dg, race_test_df, n=10)
+        DGdriver.save_generated_result(race_test_df, tokenizer_dg, "race_test_generated.csv")
+        DGdriver.save_generated_result(race_val_df, tokenizer_dg, "race_val_generated.csv")
+
+        #DGdriver.try_generate(tokenizer_dg, race_test_df, n=10)
+
     elif args.run == "none":
         ...
     elif args.run == "qg":

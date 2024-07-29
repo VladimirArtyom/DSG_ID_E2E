@@ -169,6 +169,33 @@ class Driver():
         print("--------------------------------------------")
         print()
 
+    def save_generated_result(this, df: DataFrame,
+                              tokenizer: T5Tokenizer,
+                              file_name: str,
+                              ):
+        if this.qgModel is None:
+            raise ValueError("QG Model is not initialized")
+
+        result = DataFrame(columns=["answer",
+                                    "context",
+                                    "question",
+                                    "generated"])
+        for i in len(df):
+            row = df.iloc[i]
+            answer = row["answer"]
+            context = row["context"]
+            question = row["question"]
+            generated = this.generate(answer, context,
+                                      tokenizer)
+
+            result = result.append({"correct": answer,
+                                    "context": context,
+                                    "question": question,
+                                    "generated": generated},
+                                   ignore_index=True)
+
+        result.to_csv(file_name, index=False)
+        print("Results saved to {}".format(file_name))
 
     def try_generate(this, tokenizer,
                      test_df: DataFrame,
