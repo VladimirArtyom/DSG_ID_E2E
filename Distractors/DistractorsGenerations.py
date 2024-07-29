@@ -77,7 +77,7 @@ class DGDataset(Dataset):
     def __getitem__(this, index: int):
         row = this.data.iloc[index]
         source_encoding = this.tokenizer(
-            "{} {} {} {} {}".format(row["answer"],
+            "{} {} {} {} {}".format(row["correct"],
                                     this.sep_token,
                                     row["question"],
                                     this.sep_token,

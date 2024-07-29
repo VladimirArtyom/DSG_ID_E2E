@@ -77,7 +77,7 @@ arg.add_argument("-dgtmax", "--dg_target_max_token_len",
 arg.add_argument("-dge", "--dg_epochs",
                  type=int, default=dg_config.dg_epochs)
 
-arg.add_argument("-dgmodelpth" "--dg_model_path",
+arg.add_argument("-dgmodelpth", "--dg_model_path",
                  type=str, default=dg_config.dg_model_path)
 
 

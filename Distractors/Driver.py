@@ -202,7 +202,7 @@ class Driver():
         if this.dgModel is None:
             raise ValueError("DG Model is not initialized")
 
-        result = DataFrame(columns=["answer",
+        result = DataFrame(columns=["correct",
                                     "context",
                                     "question",
                                     "incorrect_1",
@@ -211,7 +211,7 @@ class Driver():
                                     "generated"])
         for i in len(df):
             row = df.iloc[i]
-            answer = row["answer"]
+            answer = row["correct"]
             context = row["context"]
             question = row["question"]
             incorrect_1 = row["incorrect_1"]
@@ -221,7 +221,7 @@ class Driver():
                                       context, incorrect_1,
                                       incorrect_2, incorrect_3, tokenizer)
 
-            result = result.append({"answer": answer,
+            result = result.append({"correct": answer,
                                     "context": context,
                                     "question": question,
                                     "incorrect_1": incorrect_1,
@@ -240,7 +240,7 @@ class Driver():
 
         for i in range(n):
             row = df.iloc[i]
-            answer = row["answer"]
+            answer = row["correct"]
             context = row["context"]
             question = row["question"]
             incorrect_1 = row["incorrect_1"]

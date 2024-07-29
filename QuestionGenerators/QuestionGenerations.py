@@ -133,11 +133,11 @@ class QGDataModule(LightningDataModule):
 
     def setup(this, stage: str = None):
         this.train_dataset = QGDataset(this.train_df, this.tokenizer,
-                                        this.sep_token,
+                                       this.sep_token,
                                        this.masking_chance,
                                        this.source_max_token_len,
                                        this.target_max_token_len)
-        
+
         this.val_dataset = QGDataset(this.val_df, this.tokenizer,
                                      this.sep_token,
                                      this.masking_chance,
