@@ -70,8 +70,8 @@ class Driver():
     def load_qg_model(this, model_path: str):
         if this.qgModel is None:
             raise ValueError("QGModel not initialized")
-        this.qgModel = QGModel.load_from_checkpoint(model_path)
-        #this.qgModel.state_dict(load(model_path, map_location="cpu"))
+        this.qgModel.load_state_dict(load(model_path,
+                                          map_location="cpu")['state_dict'])
         return
 
     def run_qg(this,

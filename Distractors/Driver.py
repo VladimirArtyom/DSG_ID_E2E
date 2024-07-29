@@ -78,8 +78,8 @@ class Driver():
         if this.dgModel is None:
             raise ValueError("DGModel not initialized")
 
-        this.dgModel.state_dict(load(model_path,
-                                     map_location=map_location))
+        this.dgModel.load_state_dict(load(model_path,
+                                     map_location=map_location)['state_dict'])
         return
 
     def run_dg(this,
@@ -137,7 +137,8 @@ class Driver():
             val_df,
             test_df,
             tokenizer)
-        this.load_dg_model(model_path, map_location)
+        this.load_dg_model(model_path,
+                           map_location)
         print("Distractor generation model loaded succesfully")
 
     def generate(this, answer: str,
