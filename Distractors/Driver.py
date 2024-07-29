@@ -1,11 +1,10 @@
-from DistractorsGenerations import DGModel, DGDataModule
+from Distractors.DistractorsGenerations import DGModel, DGDataModule
 from torch import load, Tensor
 from torch.optim import Optimizer
 from pandas import DataFrame
-from transformers import T5TokenizerFast as T5Tokenizer, T5PreTrainedModel 
+from transformers import T5TokenizerFast as T5Tokenizer, T5PreTrainedModel
 from typing import List, Dict
 from pytorch_lightning import Trainer
-
 
 class Driver():
     def __init__(this,

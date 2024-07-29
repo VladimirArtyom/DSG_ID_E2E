@@ -85,12 +85,21 @@ args = arg.parse_args()
 
 print(args)
 
-train_df: DataFrame = read_csv(main_config.train_path)
-val_df: DataFrame = read_csv(main_config.val_path)
-test_df: DataFrame = read_csv(main_config.test_path)
+train_df: DataFrame = read_csv(main_config.train_path_qg)
+val_df: DataFrame = read_csv(main_config.val_path_qg)
+test_df: DataFrame = read_csv(main_config.test_path_qg)
+
+race_train_df: DataFrame = read_csv(main_config.train_path_dg)
+race_dev_df: DataFrame = read_csv(main_config.dev_path_dg)
+race_test_df: DataFrame = read_csv(main_config.test_path_dg)
+
 tokenizer: T5Tokenizer = T5Tokenizer.from_pretrained(main_config.model_name)
-new_tokenizer_token = tokenizer.add_tokens(main_config.sep_token)
+tokenizer_dg = T5Tokenizer.from_pretrained(main_config.model_name)
+
+tokenizer.add_tokens(main_config.sep_token)
+tokenizer_dg.add_tokens(main_config.sep_token)
 new_tokenizer_len = len(tokenizer)
+
 ### QG ###
 model_qg = T5ForConditionalGeneration.from_pretrained(main_config.model_name,
                                                       return_dict=True)
@@ -129,14 +138,14 @@ if args.type_run == "test":
                          model_qg, new_tokenizer_len,
                          optimizer_qg, optimizer_qg_lr
                          )
-        QGdriver.try_generate(tokenizer, test_df)
+        QGdriver.try_generate(tokenizer, test_df, n=10)
 
         # DG
         DGdriver.test_dg(args.dg_model_path, model_dg,
-                         train_df, val_df, test_df,
-                         tokenizer, new_tokenizer_len,
+                         train_df, val_df, race_test_df,
+                         tokenizer_dg, new_tokenizer_len,
                          optimizer_dg, optimizer_dg_lr, map_location=device)
-        DGdriver.try_generate()
+        DGdriver.try_generate(tokenizer_dg, race_test_df, n=10)
     elif args.run == "none":
         ...
     elif args.run == "qg":

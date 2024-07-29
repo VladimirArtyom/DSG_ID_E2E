@@ -125,7 +125,7 @@ class Driver():
 
     def generate(this, answer: str, context: str,
                  tokenizer: T5Tokenizer,
-                 beams: int = 1, rep_penalty: float = 1.0,
+                 beams: int = 2, rep_penalty: float = 1.0,
                  length_penalty: float = 1.0) -> str:
 
         source_encoding = tokenizer(
